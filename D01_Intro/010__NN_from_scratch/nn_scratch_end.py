@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import random
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
@@ -13,7 +14,7 @@ df = pd.read_csv('heart.csv')
 df.head()
 
 #%% separate independent / dependent features
-X = np.array(df.loc[ :, df.columns != 'gender'])
+X = np.array(df.drop(columns=['output']))
 y = np.array(df['output'])
 
 print(f"X: {X.shape}, y: {y.shape}")
@@ -29,6 +30,9 @@ X_test_scale = scaler.transform(X_test)
 #%% network class
 class NeuralNetworkFromScratch:
     def __init__(self, LR, X_train, y_train, X_test, y_test):
+        
+        # set numpy seed
+        np.random.seed(123)
         self.w = np.random.randn(X_train.shape[1])
         self.b = np.random.randn()
         self.LR = LR
@@ -71,7 +75,7 @@ class NeuralNetworkFromScratch:
         self.w = self.w - dL_dw * self.LR
 
     def train(self, ITERATIONS):
-        for i in range(ITERATIONS):
+        for _ in range(ITERATIONS):
             # random position
             random_pos = np.random.randint(len(self.X_train))
             
@@ -102,7 +106,7 @@ class NeuralNetworkFromScratch:
     
 #%% Hyper parameters
 LR = 0.1
-ITERATIONS = 1000
+ITERATIONS = 10000
 
 #%% model instance and training
 nn = NeuralNetworkFromScratch(LR=LR, X_train=X_train_scale, y_train=y_train, X_test=X_test_scale, y_test=y_test)
