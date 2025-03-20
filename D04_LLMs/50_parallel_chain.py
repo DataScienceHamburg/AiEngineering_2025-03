@@ -1,5 +1,6 @@
 #%% packages
 from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel
 from langchain_core.output_parsers import StrOutputParser
@@ -7,17 +8,18 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 
 #%% Model Instance
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+# llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=1)
 
 #%% Prepare Prompts
 # example: style variations (friendly, polite) vs. (savage, angry)
 polite_prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant. Reply in a friendly and polite manner."),
+    ("system", "You are a helpful assistant. Reply in a friendly and polite manner. answer in one sentence."),
     ("human", "{topic}")
 ])
 
 savage_prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant. Reply in a savage and angry manner."),
+    ("system", "You are a helpful assistant. Reply in a savage and angry manner. answer in one sentence."),
     ("human", "{topic}")
 ])
 
